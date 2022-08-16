@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 
+import django_heroku
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,7 +27,7 @@ SECRET_KEY = 'django-insecure-286a+47d1pba)_li=*g_qf@ne(km-iryc$8nauo#fy729@i=je
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['updates-corona4.herokuapp.com','localhost']
 
 
 # Application definition
@@ -149,3 +151,7 @@ LEAFLET_CONFIG={
     'MIN_ZOOM':2,
     'SCALE':'both',
 }
+
+
+# Activate Django-Heroku.
+django_heroku.settings(locals())
