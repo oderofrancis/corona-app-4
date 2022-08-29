@@ -12,14 +12,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 
-import os
-
-import django_heroku
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-import dj_database_url
 
 
 # Quick-start development settings - unsuitable for production
@@ -31,7 +25,7 @@ SECRET_KEY = 'django-insecure-286a+47d1pba)_li=*g_qf@ne(km-iryc$8nauo#fy729@i=je
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['updates-corona4.herokuapp.com','localhost']
+ALLOWED_HOSTS = ['updates-corona4.herokuapp.com']
 
 
 # Application definition
@@ -51,13 +45,13 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'corona.urls'
@@ -84,37 +78,17 @@ WSGI_APPLICATION = 'corona.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-#         
-#         }
-# }
-
-# deployment
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT')
-    }
+        'NAME': 'corona',
+        'USER': 'postgres',
+        'PASSWORD': 'franodex',
+        'HOST':'localhost',
+        'PORT':'5432',
+        }
 }
-db_from_env = dj_database_url.config(conn_max_age=500)
 
-DATABASES['default'].update(db_from_env)
-
-DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
-
-
-# gdal
-
-GDAL_LIBRARY_PATH = os.getenv('GDAL_LIBRARY_PATH')
-
-GEOS_LIBRARY_PATH = os.getenv('GEOS_LIBRARY_PATH')
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -152,15 +126,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
+STATIC_ROOT = Path(BASE_DIR, 'staticfiles')
+
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     Path(BASE_DIR,'static')
 ]
-
-# for deployment on heroku
-
-STATIC_ROOT = Path(BASE_DIR,'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -180,10 +152,3 @@ LEAFLET_CONFIG={
     'MIN_ZOOM':2,
     'SCALE':'both',
 }
-
-
-# Activate Django-Heroku.
-django_heroku.settings(locals())
-
-#  Add configuration for static files storage using whitenoise
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
